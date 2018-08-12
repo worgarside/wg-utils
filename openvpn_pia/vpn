@@ -12,7 +12,7 @@ VPN_IP="$(wget http://ipinfo.io/ip -qO -)"
 
 if [ "$INITIAL_IP" = "$VPN_IP" ] 
 then
-	echo "IP address is unchanged. Possible failure. "
+	echo "IP address is unchanged @ $INITIAL_IP. Possible failure. "
 else
 	echo "VPN connected @ $VPN_IP. Starting Deluge daemon and webUI"
 	deluged
