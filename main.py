@@ -7,11 +7,9 @@ from math import ceil
 from textwrap import wrap
 from os import listdir, path, system, name, environ, getcwd
 
-# system('cls' if name == 'nt' else 'clear')
-
 try:
-    with open('{}/.env'.format(getcwd()), 'r') as envfile:
-        env_vars = envfile.read().splitlines()
+    with open('{}/.env'.format(getcwd()), 'r') as env_file:
+        env_vars = env_file.read().splitlines()
 
         for env_var in env_vars:
             if env_var.startswith('#'):
@@ -21,7 +19,6 @@ try:
 except FileNotFoundError:
     pass
 
-PACKAGE_NAME = 'cfl-utils'
 HELP_COL_WIDTHS = {
     'module': 45,
     'author': 32
@@ -42,11 +39,9 @@ def walk(top, max_depth):
 def get_modules():
     dirname, _ = path.split(path.abspath(__file__))
     exportable_modules = []
-    current_file_name = __file__.split('/')[-1]
-    npm_loc = '/'.join(__file__.split('/')[:-2])
+    current_file_loc = '/'.join(__file__.split('/')[:-1])
 
-    lib_loc = '{}/lib/node_modules/@chetwoodfinancial/{}/lib'.format(npm_loc, PACKAGE_NAME) \
-        if current_file_name == PACKAGE_NAME else 'lib'
+    lib_loc = '{}/lib'.format(current_file_loc)
 
     for root, dirs, _ in walk(lib_loc, 1):
         for sub_dir in dirs:
@@ -139,13 +134,13 @@ def display_module_specific_help(module_name):
 def display_default_help():
     author = description = None
     print_help_box(
-        title='cfl-utils',
-        author='DEV TEAM',
-        description='Simple-ish scripts to make stuff easier at Chetwood Financial Limited. See the list below.'
+        title='wg-utils',
+        author='Will Garside',
+        description='Simple-ish scripts to make my life easier (mainly on my Pi). See the list below.'
     )
 
-    print('To run: \33[1mcfl-utils <module.name> [--key value]\33[0m')
-    print('For more info: \33[1mcfl-utils <module.name> --help\33[0m\n')
+    print('To run: \33[1mwg-utils <module.name> [--key value]\33[0m')
+    print('For more info: \33[1mwg-utils <module.name> --help\33[0m\n')
 
     print('{}{}{}'.format(
         '\33[4mModule\33[0m'.ljust(HELP_COL_WIDTHS['module']),
@@ -169,7 +164,7 @@ def display_default_help():
         except AttributeError:
             print('{}\033[1m\033[91m{}{}\033[0m'.format(
                 module_path.ljust(HELP_COL_WIDTHS['module'] - 8),
-                '{}.user_help is not defined 🙃'.format(module),
+                '{}.user_help is not defined'.format(module),
                 ''
             ))
     print()
@@ -219,23 +214,23 @@ def main():
     _, args = root_parser.parse_known_args()
     system('cls' if name == 'nt' else 'clear')
 
-    if len({'--help', '-h'} & set(args)) > 0:
-        if len(args) == 1:
-            display_default_help()
-        else:
+    if len(args) == 0 or len({'--help', '-h'} & set(args)) > 0:
+        if len(args) > 0:
             try:
                 args.remove('--help')
             except ValueError:
                 args.remove('-h')
             display_module_specific_help(args[0])
+        else:
+            display_default_help()
         exit(0)
 
     func = get_main_function(args)
+
     del args[0]
     kwarg_dict = parse_args(args)
     func(**kwarg_dict)
 
 
 if __name__ == '__main__':
-    # main()
-    print('Hello')
+    main()
