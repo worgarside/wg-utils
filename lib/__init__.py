@@ -36,7 +36,7 @@ modules = get_modules()
 
 for module in modules:
     key = module.split('.')[-1]
-    exec("%s=import_module('%s')" % (key, module))
+    exec("{}=import_module('{}')".format(key, module))
     exportable_imports.append(key)
 
 __all__ = exportable_imports

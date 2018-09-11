@@ -12,7 +12,7 @@ try:
         env_vars = env_file.read().splitlines()
 
         for env_var in env_vars:
-            if env_var.startswith('#'):
+            if env_var.startswith('#') or not env_var:
                 continue
             key, value = env_var.split('=')
             environ[key] = value
@@ -136,7 +136,7 @@ def display_default_help():
     print_help_box(
         title='wg-utils',
         author='Will Garside',
-        description='Simple-ish scripts to make my life easier (mainly on my Pi). See the list below.'
+        description='Simple-ish scripts to make my life easier. See the list below.'
     )
 
     print('To run: \33[1mwg-utils <module.name> [--key value]\33[0m')
