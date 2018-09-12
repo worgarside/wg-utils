@@ -20,6 +20,8 @@ def get_modules():
     dirname, _ = os.path.split(os.path.abspath(__file__))
     exportable_modules = []
     file_loc = '/'.join(__file__.split('/')[:-1])
+    if not file_loc:
+        file_loc = '\\'.join(__file__.split('\\')[:-1])
 
     for root, dirs, _ in walk(file_loc, 1):
         for sub_dir in dirs:
@@ -36,7 +38,14 @@ modules = get_modules()
 
 for module in modules:
     key = module.split('.')[-1]
-    exec("{}=import_module('{}')".format(key, module))
+    try:
+        exec("{}=import_module('{}')".format(key, module))
+    except KeyError as key_error:
+        if str(key_error) == "'DISPLAY'":
+            os.environ['DISPLAY'] = ':0.0'
+            modules.append(module)
+        else:
+            raise KeyError(key_error)
     exportable_imports.append(key)
 
 __all__ = exportable_imports

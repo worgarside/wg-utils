@@ -4,11 +4,14 @@ from time import sleep
 from sys import stdout
 
 
-def read_file(file_path):
+def read_file(file_path, interval=None):
     try:
         with open(file_path, 'r') as file:
             for line in file:
-                typewrite(line)
+                if interval:
+                    typewrite(line, interval=interval)
+                else:
+                    typewrite(line)
 
     except FileNotFoundError:
         print("Unable to find file '{}'".format(file_path))
@@ -25,6 +28,10 @@ def main(**kwargs):
             sleep(1)
         print()
 
+    if 'interval' in kwargs and type(float(kwargs['interval'])) in {float, int}:
+        print('Using interval {}'.format(kwargs['interval']))
+        read_file(kwargs['file'], kwargs['interval'])
+    else:
         read_file(kwargs['file'])
 
 

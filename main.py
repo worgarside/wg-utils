@@ -41,8 +41,14 @@ def get_modules():
     exportable_modules = []
     current_file_loc = '/'.join(__file__.split('/')[:-1])
 
-    lib_loc = '{}/lib'.format(current_file_loc)
+    if not current_file_loc:
+        # print('.....', current_file_loc, '---')
+        current_file_loc = '\\'.join(__file__.split('\\')[:-1])
+        # print(__file__, '.....', current_file_loc, '---')
 
+    lib_loc = '{}/lib'.format(current_file_loc)
+    # print(current_file_loc)
+    # exit()
     for root, dirs, _ in walk(lib_loc, 1):
         for sub_dir in dirs:
             if not sub_dir == '__pycache__':

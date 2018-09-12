@@ -1,4 +1,2 @@
 pigpio==1.40.post1
 PyAutoGUI==0.9.38
-pyobjc==4.2.2; sys_platform=='darwin'
-pyobjc-core==4.2.2; sys_platform=='darwin'

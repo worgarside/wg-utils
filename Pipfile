@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 pyautogui = "*"
-pyobjc = "*"
 pigpio = "*"
 
 [dev-packages]
