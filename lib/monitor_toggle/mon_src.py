@@ -3,15 +3,20 @@ import pigpio
 
 pi = pigpio.pi()
 
-PIN_OUT = 26
+PIN_OUT = [18, 23, None, 24, None]
+PIN_SEQUENCE = [3, 1, 1, 1, 3, 1, 1, 3, 1, 3]
 
 
 def main():
-    pi.set_mode(PIN_OUT, pigpio.OUTPUT)
+    for pin in PIN_OUT:
+        pi.set_mode(pin, pigpio.OUTPUT)
 
-    pi.write(PIN_OUT, 1)
-    sleep(0.05)
-    pi.write(PIN_OUT, 0)
+    for pin_ref in PIN_SEQUENCE:
+        pi.write(PIN_OUT[pin_ref], 1)
+        sleep(0.05)
+        pi.write(PIN_OUT[pin_ref], 0)
+        sleep(0.05)
+
     pi.stop()
 
 
@@ -21,7 +26,7 @@ def user_help():
     :returns: a dictionary of argument keys and descriptions to be printed in the same way by every script
     """
     author = 'Will Garside'
-    description = 'Toggles the laptop screen. Requires the circuit created in Schematic.fzz'
+    description = 'Toggles the laptop screen display source. Requires the circuit created in Schematic.fzz'
     expected_args = {}
     env_list = {}
 
