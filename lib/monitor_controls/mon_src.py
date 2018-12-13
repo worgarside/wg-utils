@@ -1,7 +1,8 @@
 from time import sleep
-import pigpio
 
-pi = pigpio.pi()
+from pigpio import pi, OUTPUT
+
+pi = pi()
 
 PIN_OUT = [18, 23, None, 24, None]
 PIN_SEQUENCE = [3, 1, 1, 1, 3, 1, 1, 3, 1, 3]
@@ -10,15 +11,14 @@ PIN_SEQUENCE = [3, 1, 1, 1, 3, 1, 1, 3, 1, 3]
 def main():
     for pin in PIN_OUT:
         if pin:
-            pi.set_mode(pin, pigpio.OUTPUT)
+            pi.set_mode(pin, OUTPUT)
 
     for pin_ref in PIN_SEQUENCE:
         print(pin_ref, ': ', PIN_OUT[pin_ref])
         pi.write(PIN_OUT[pin_ref], 1)
         sleep(0.05)
         pi.write(PIN_OUT[pin_ref], 0)
-        sleep(0.2)
-        # exit()
+        sleep(0.3)
     pi.stop()
 
 
