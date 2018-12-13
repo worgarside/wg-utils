@@ -14,7 +14,6 @@ def main():
             pi.set_mode(pin, OUTPUT)
 
     for pin_ref in PIN_SEQUENCE:
-        print(pin_ref, ': ', PIN_OUT[pin_ref])
         pi.write(PIN_OUT[pin_ref], 1)
         sleep(0.05)
         pi.write(PIN_OUT[pin_ref], 0)
