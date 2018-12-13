@@ -15,9 +15,9 @@ def main():
 
     for pin_ref in PIN_SEQUENCE:
         pi.write(PIN_OUT[pin_ref], 1)
-        sleep(0.05)
+        sleep(0.1)
         pi.write(PIN_OUT[pin_ref], 0)
-        sleep(0.3)
+        sleep(0.4)
     pi.stop()
 
 

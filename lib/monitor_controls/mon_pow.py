@@ -10,7 +10,7 @@ def main():
     pi.set_mode(PIN_OUT, pigpio.OUTPUT)
 
     pi.write(PIN_OUT, 1)
-    sleep(0.05)
+    sleep(0.1)
     pi.write(PIN_OUT, 0)
     pi.stop()
 
