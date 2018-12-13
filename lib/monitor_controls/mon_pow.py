@@ -21,7 +21,7 @@ def user_help():
     :returns: a dictionary of argument keys and descriptions to be printed in the same way by every script
     """
     author = 'Will Garside'
-    description = 'Toggles the laptop screen power. Requires the circuit created in Schematic.fzz'
+    description = 'Toggles the laptop screen power. Requires the circuit created in Schematic_pow.fzz'
     expected_args = {}
     env_list = {}
 

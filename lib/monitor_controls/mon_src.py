@@ -9,14 +9,16 @@ PIN_SEQUENCE = [3, 1, 1, 1, 3, 1, 1, 3, 1, 3]
 
 def main():
     for pin in PIN_OUT:
-        pi.set_mode(pin, pigpio.OUTPUT)
+        if pin:
+            pi.set_mode(pin, pigpio.OUTPUT)
 
     for pin_ref in PIN_SEQUENCE:
+        print(pin_ref, ': ', PIN_OUT[pin_ref])
         pi.write(PIN_OUT[pin_ref], 1)
         sleep(0.05)
         pi.write(PIN_OUT[pin_ref], 0)
-        sleep(0.05)
-
+        sleep(0.2)
+        # exit()
     pi.stop()
 
 
@@ -26,7 +28,7 @@ def user_help():
     :returns: a dictionary of argument keys and descriptions to be printed in the same way by every script
     """
     author = 'Will Garside'
-    description = 'Toggles the laptop screen display source. Requires the circuit created in Schematic.fzz'
+    description = 'Toggles the laptop screen display source. Requires the circuit created in Schematic_src.fzz'
     expected_args = {}
     env_list = {}
 
