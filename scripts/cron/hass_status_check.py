@@ -50,16 +50,20 @@ if __name__ == '__main__':
             message = "Server response: {} - {}".format(req.status_code, req.reason)
             if not req.status_code == 200:
                 send_notification(message)
+                raise ReadTimeout
             else:
                 log(message)
             server_unresponsive = False
-        except ReadTimeout:
+        except Exception as e:
+            log(str(e))
             send_notification("Web server currently unresponsive. Attempting service restart.")
 
             stdout, stderr = Popen(['sudo', 'systemctl', 'restart', 'home-assistant@homeassistant.service'],
                                    stdout=PIPE, stderr=PIPE).communicate()
             sleep(30)
             if (time() - start_time) > 240:
-                send_notification("Restart attempt time elapsed > 4 minutes. Exiting.")
+                send_notification("Restart attempt time elapsed > 4 minutes. Rebooting pi.")
+                log('Rebooting pi')
                 log()
+                stdout, stderr = Popen(['sudo', 'reboot'], stdout=PIPE, stderr=PIPE).communicate()
                 exit()
