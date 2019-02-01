@@ -84,7 +84,7 @@ def main():
                 notify(m=f'{item_title.title().strip()}\n\n{item_desc[0].strip()}\n\n{item_link}')
 
     with open(PKL_FILE, 'wb') as f:
-        dump({'scraped_links'}, f)
+        dump({scraped_links}, f)
 
 
 if __name__ == '__main__':
