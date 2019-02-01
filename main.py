@@ -19,6 +19,7 @@ try:
 except FileNotFoundError:
     pass
 
+
 HELP_COL_WIDTHS = {
     'module': 45,
     'author': 32
