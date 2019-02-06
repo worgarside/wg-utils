@@ -84,7 +84,7 @@ def _get_client():
     return build(API_SERVICE_NAME, API_VERSION, credentials=updated_credentials, cache_discovery=False)
 
 
-def initialize_upload(yt_client):
+def initialize_upload(yt_client, video_file):
     body = {
         'snippet': {
             'title': 'options.title',
@@ -98,7 +98,7 @@ def initialize_upload(yt_client):
     insert_request = yt_client.videos().insert(
         part=','.join(body.keys()),
         body=body,
-        media_body=MediaFileUpload('/Users/will/Projects/_Other/wg-utils/Arm_Piece_0.2mm_PLA_MK3_20190206010001.mp4',
+        media_body=MediaFileUpload(video_file,
                                    chunksize=-1, resumable=True)
     )
 
