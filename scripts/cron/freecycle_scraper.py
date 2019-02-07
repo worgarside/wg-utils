@@ -1,4 +1,4 @@
-from os import system, name, getenv
+from os import system, name, getenv, path
 from dotenv import load_dotenv
 
 from bs4 import BeautifulSoup
@@ -19,9 +19,14 @@ KEYWORDS = {'desktop', 'laptop', 'computer', 'dell', 'acer', 'parts', 'electroni
             'asus', 'monitor', 'pi', 'hp', 'printer', 'microwave', 'phone', 'lenovo', 'arduino', 'thinkpad', 'xiaomi',
             'macbook', 'apple', 'mac', 'electronics'}
 
-PKL_FILE = '/home/pi/Projects/wg-utils/scripts/cron/freecycle_links.pkl'
+WGUTILS = 'wg-utils'
+DIRNAME, _ = path.split(path.abspath(__file__))
+WGUTILS_DIR = DIRNAME[:DIRNAME.find(WGUTILS) + len(WGUTILS)] + '/'
 
-load_dotenv()
+PKL_FILE = '{}scripts/cron/freecycle_links.pkl'.format(WGUTILS_DIR)
+ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
+
+load_dotenv(ENV_FILE)
 
 PB_API_KEY = getenv('PB_API_KEY')
 
