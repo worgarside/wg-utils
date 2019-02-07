@@ -3,3 +3,4 @@
 *.pyc
 *.env
 secret_files/*
+scripts/cron/freecycle_links.pkl
