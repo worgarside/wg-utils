@@ -84,6 +84,7 @@ def wait_for_pb_notif(ws):
 
             if len(valid_pushes) > 1:
                 raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
+        sleep(30)
 
     sleep(60)  # Make sure Octolapse has rendered properly
 
