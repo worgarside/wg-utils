@@ -8,7 +8,7 @@ from textwrap import wrap
 from os import listdir, path, system, name, environ, getcwd
 
 try:
-    with open(f'{getcwd()}/.env', 'r') as env_file:
+    with open('{}/.env'.format(getcwd()), 'r') as env_file:
         env_vars = env_file.read().splitlines()
 
         for env_var in env_vars:
@@ -18,7 +18,6 @@ try:
             environ[key] = value
 except FileNotFoundError:
     pass
-
 
 HELP_COL_WIDTHS = {
     'module': 45,
@@ -45,7 +44,7 @@ def get_modules():
     if not current_file_loc:
         current_file_loc = '\\'.join(__file__.split('\\')[:-1])
 
-    lib_loc = f'{current_file_loc}/lib'
+    lib_loc = '{}/lib'.format(current_file_loc)
 
     for root, dirs, _ in walk(lib_loc, 1):
         for sub_dir in dirs:
@@ -53,7 +52,7 @@ def get_modules():
                 for _, _, files in walk(path.join(root, sub_dir), 0):
                     for file in files:
                         if file.split('.')[-1] == 'py' and not file == '__init__.py':
-                            exportable_modules.append(f'{sub_dir}.{file[:-3]}')
+                            exportable_modules.append('{}.{}'.format(sub_dir, file[:-3]))
 
     return exportable_modules
 
@@ -66,9 +65,9 @@ def print_help_box(title=None, author=None, description=None):
         ljust_space = int(ceil((length - str_len) / 2))
 
         if color:
-            string = f"{color}{string}\033[0m"
+            string = '{}{}\033[0m'.format(color, string)
 
-        return f'{"|".ljust(ljust_space)}{string}{"|".rjust(rjust_space)}'
+        return '{}{}{}'.format('|'.ljust(ljust_space), string, '|'.rjust(rjust_space))
 
     width = 60
     border_line = '~' * width
@@ -82,7 +81,7 @@ def print_help_box(title=None, author=None, description=None):
         print(cap_line(title.upper(), length=width, color='\033[1m\033[91m'))
 
     if author:
-        print(cap_line(f'Author: {author}', length=width, color='\033[95m'))
+        print(cap_line('Author: {}'.format(author), length=width, color='\033[95m'))
 
     if description:
         text_split = wrap(description, max_text_width, replace_whitespace=False)
@@ -100,34 +99,34 @@ def display_module_specific_help(module_name):
         try:
             author, description, expected_args, env_list = user_help()
         except ValueError:
-            exit(f'Not enough values returned from {module_name}.user_help. Cannot continue.')
+            exit('Not enough values returned from {}.user_help. Cannot continue.'.format(module_name))
         print_help_box(title=module_name, author=author, description=description)
         if len(expected_args) > 0:
             print('\n\33[4mAccepted arguments:\33[0m ')
             for k in expected_args:
                 desc = expected_args[k]
-                print(f' {k.ljust(12)} {desc}')
+                print(' {} {}'.format(k.ljust(12), desc))
 
         if len(env_list) > 0:
             print('\n\33[4mEnvironment variables:\33[0m')
             for k in env_list:
                 v = env_list[k]
-                print(f' {k}={v}')
+                print(' {}={}'.format(k, v))
 
             if input('\n> Output to sample env file? [Y/n] ').lower() in {'y', ''}:
-                with open(f'{module_name}.env', 'w') as file:
+                with open('{}.env'.format(module_name), 'w') as file:
                     for j in env_list:
                         w = env_list[j]
-                        file.write(f'{j}={w}\n')
-                print(f"Done! See '{module_name}.env")
+                        file.write('{}={}\n'.format(j, w))
+                print("Done! See '{}.env'".format(module_name))
 
         print()
     except AttributeError:
         print_help_box(
             title=module_name,
             author='Unknown',
-            description=f'{module_name}.user_help is undefined. No arguments have been provided either. Good luck '
-            f'using the script! '
+            description='{}.user_help is undefined. No arguments have been provided either. Good luck using the script!'
+                .format(module_name)
         )
         exit()
     except NameError:
@@ -159,12 +158,14 @@ def display_default_help():
             try:
                 author, description, _, _ = user_help()
             except ValueError:
-                exit(f'Not enough values returned from {module}.user_help. Cannot continue.')
-            print(f"{module_path.ljust(HELP_COL_WIDTHS['module'] - 8)}"
-                  f"{author.ljust(HELP_COL_WIDTHS['author'] - 8)}{description}")
+                exit('Not enough values returned from {}.user_help. Cannot continue.'.format(module))
+            print('{}{}{}'.format(module_path.ljust(HELP_COL_WIDTHS['module'] - 8),
+                                  author.ljust(HELP_COL_WIDTHS['author'] - 8),
+                                  description))
         except AttributeError:
-            print(f"{module_path.ljust(HELP_COL_WIDTHS['module'] - 8)}"
-                  f"\033[1m\033[91m{f'{module}.user_help is not defined'}\033[0m")
+            print('{}\033[1m\033[91m{}\033[0m'
+                  .format(module_path.ljust(HELP_COL_WIDTHS['module'] - 8),
+                          '{}.user_help is not defined'.format(module)))
     print()
 
 
@@ -201,7 +202,7 @@ def get_main_function(args):
     try:
         return getattr(eval(args[0]), 'main')
     except (TypeError, NameError):
-        exit(f"'{args[0]}' is not a valid utility. Exiting.")
+        exit("'{}' is not a valid utility. Exiting.".format(args[0]))
     except IndexError:
         display_default_help()
         exit(0)
