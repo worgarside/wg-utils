@@ -8,8 +8,8 @@ def start_vpn():
     print('Starting VPN...', end=' ')
     stdout.flush()
     cmd = ['sudo']
-    config_path = f'{path.dirname(path.abspath(__file__))}/config/config.ovpn'
-    login_path = f'{path.dirname(path.abspath(__file__))}/config/login.txt'
+    config_path = '{}/config/config.ovpn'.format(path.dirname(path.abspath(__file__)))
+    login_path = '{}/config/login.txt'.format(path.dirname(path.abspath(__file__)))
     arg_list = ['-b', 'openvpn', '--config', config_path, '--auth-user-pass', login_path]
     Popen(cmd + arg_list, stdout=PIPE)
     sleep(10)
@@ -49,11 +49,11 @@ def main():
     new_ip = get_ip()
 
     if initial_ip == new_ip:
-        print(f'Success.\nVPN was already running. IP is {new_ip}')
+        print('Success.\nVPN was already running. IP is {}'.format(new_ip))
     elif disabled_ip == new_ip:
-        print(f'Failure.\nVPN unable to start. IP is {new_ip}')
+        print('Failure.\nVPN unable to start. IP is {}'.format(new_ip))
     else:
-        print(f'Success.\nVPN started. IP is {new_ip}')
+        print('Success.\nVPN started. IP is {}'.format(new_ip))
 
 
 def user_help():
