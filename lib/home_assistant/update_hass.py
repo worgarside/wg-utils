@@ -24,16 +24,16 @@ def main():
     print('Pulling from Git...')
     repo.remotes.origin.pull()
 
-    with open('{}{}'.format(HASS_DIR, CORE_FILES_LIST), 'r') as f:
+    with open(f'{HASS_DIR}{CORE_FILES_LIST}', 'r') as f:
         core_files = [x.rstrip('\n\r') for x in f.readlines()]
 
-    with open('{}.gitignore'.format(HASS_DIR)) as f:
+    with open(f'{HASS_DIR}.gitignore') as f:
         gitignore_files = set([x.rstrip('\n\r') for x in f.readlines()])
 
-    files_to_copy = [('{}{}'.format(SOURCE_DIR, f), '{}{}'.format(HASS_DIR, f)) for f in core_files
-                     if not _compare_files('{}{}'.format(SOURCE_DIR, f), '{}{}'.format(HASS_DIR, f))
+    files_to_copy = [(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}') for f in core_files
+                     if not _compare_files(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}')
                      and f not in gitignore_files]
-    print('{} files to copy\n'.format(len(files_to_copy)))
+    print(f'{len(files_to_copy)} files to copy\n')
 
     for source, dest in files_to_copy:
         print(dest.replace(HASS_DIR, ''))
@@ -44,7 +44,7 @@ def main():
             print(INDENT + error.decode('utf-8').rstrip('\n'))
             if 'no such file or directory' in error.decode('utf-8').lower():
                 directory = '/'.join(error.decode('utf-8').split("'")[1].split('/')[:-1])
-                print('{}Creating directory {}'.format(INDENT, directory))
+                print(f'{INDENT}Creating directory {directory}')
                 makedirs(directory)
                 p = Popen(['cp', source, dest], stdout=PIPE, stderr=PIPE)
                 p.wait()
