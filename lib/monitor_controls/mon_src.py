@@ -19,7 +19,7 @@ def main():
 
     while True:
         if pi.read(PIN_IN):
-            print('Button pressed at {}'.format(datetime.now()))
+            print(f'Button pressed at {datetime.now()}')
             for pin_ref in PIN_SEQUENCE:
                 pi.write(PIN_OUT[pin_ref], 1)
                 sleep(0.1)
