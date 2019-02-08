@@ -54,7 +54,7 @@ def main():
         table = BeautifulSoup(get(group).content, 'html.parser').findAll('table')
 
         if not len(table) == 1:
-            notify(m=f'Number of tables on page != 1: {len(table)}')
+            notify(m='Number of tables on page != 1: {}'.format(len(table)))
         else:
             table = table[0]
 
@@ -64,7 +64,7 @@ def main():
             item_link_set = set([a['href'] for a in item.findAll('a', href=True)])
 
             if not len(item_link_set) == 1:
-                notify(m=f'Number of links in row {item} != 1: {len(item_link_set)}')
+                notify(m='Number of links in row {} != 1: {}'.format(item, len(item_link_set)))
 
             item_link = item_link_set.pop()
 
@@ -86,7 +86,7 @@ def main():
             item_lookup = set(' '.join(item_desc).split()) | set(item_title.split())
 
             if KEYWORDS & item_lookup:
-                notify(m=f'{item_title.title().strip()}\n\n{item_desc[0].strip()}\n\n{item_link}')
+                notify(m='{}\n\n{}\n\n{}'.format(item_title.title().strip(), item_desc[0].strip(), item_link))
 
     with open(PKL_FILE, 'wb') as f:
         dump(scraped_links, f)
