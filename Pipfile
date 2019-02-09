@@ -13,6 +13,7 @@ gitpython = "*"
 google-api-python-client = "*"
 google-auth-oauthlib = "*"
 websocket-client = "*"
+paho-mqtt = "*"
 
 [dev-packages]
 
