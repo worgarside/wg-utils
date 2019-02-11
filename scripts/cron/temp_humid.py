@@ -6,6 +6,7 @@ from os import path
 from dotenv import load_dotenv
 from paho.mqtt.client import Client
 from pigpio import pi
+from time import sleep
 
 WGUTILS = 'wg-utils'
 DIRNAME, _ = path.split(path.abspath(__file__))
@@ -39,6 +40,7 @@ def main():
     mqtt_client = setup_mqtt()
     s = DHT22.Sensor(pi(), DHT22_GPIO)
     s.trigger()
+    sleep(2)  # DO NOT REMOVE - the sensor needs this delay to read the values
     mqtt_client.publish(MQTT_TOPIC, payload=dumps({'temperature': s.temperature(), 'humidity': s.humidity()}))
 
 
