@@ -55,13 +55,14 @@ def exponential_backoff(func, max_retries=10, retriable_exceptions=RETRIABLE_EXC
 
 
 def main():
-    def connect():
-        res = post('http://{}/api/connection'.format(OCTOPI_HOST), headers={'X-Api-Key': OCTOPRINT_API_KEY},
-                   json={'command': 'connect'})
-
-        return res.status_code, res
-
-    exponential_backoff(connect)
+    # def connect():
+    #     res = post('http://{}/api/connection'.format(OCTOPI_HOST), headers={'X-Api-Key': OCTOPRINT_API_KEY},
+    #                json={'command': 'connect'})
+    #
+    #     return res.status_code, res
+    #
+    # exponential_backoff(connect)
+    pass
 
 
 def user_help():
