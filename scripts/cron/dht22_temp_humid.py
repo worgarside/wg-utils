@@ -32,7 +32,7 @@ def on_connect(client, userdata, flags, rc):
 def setup_mqtt():
     temp_client = Client()
     temp_client.on_connect = on_connect
-    temp_client.connect('192.168.1.2', 1883, 60)
+    temp_client.connect(MQTT_BROKER_HOST, 1883, 60)
     return temp_client
 
 
