@@ -33,8 +33,8 @@ def setup_mqtt():
     return temp_client
 
 
-def get_disk_free():
-    return round(disk_usage('/home').free / 1024 ** 3, 1)
+def get_disk_usage_percent():
+    return round(disk_usage('/home').percent)
 
 
 def get_memory_usage():
@@ -54,7 +54,7 @@ def main():
 
     stats = {
         'temperature': get_cpu_temp(),
-        'disk_free': get_disk_free(),
+        'disk_usage_percent': get_disk_usage_percent(),
         'memory_usage': get_memory_usage(),
         'cpu_usage': get_cpu_usage(),
         'load_15m': get_load_15m()
