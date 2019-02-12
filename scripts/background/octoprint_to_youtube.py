@@ -70,22 +70,26 @@ def wait_for_pb_notif(ws):
     ws.connect('wss://stream.pushbullet.com/websocket/{}'.format(PB_API_KEY))
 
     valid_pushes = []
+    print('Listening to PushBullet...')
 
     while not len(valid_pushes):
         if loads(ws.recv())['type'] == 'tickle':
+            print('Tickle push received!')
+
             notif_time = datetime.now().timestamp() - 10
 
             res = get('https://api.pushbullet.com/v2/pushes?modified_after={}'.format(notif_time), headers={
                 'Access-Token': PB_API_KEY
             })
 
-            valid_pushes = [push for push in res.json()['pushes'] if
-                            'title' in push and 'print' in push['title'].lower()]
+            valid_pushes = [push for push in res.json()['pushes']
+                            if 'title' in push and 'print' in push['title'].lower()]
 
             if len(valid_pushes) > 1:
                 raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
         sleep(30)
 
+    print(f"Valid push found: {valid_pushes[0]['title']}")
     sleep(60)  # Make sure Octolapse has rendered properly
 
 
@@ -117,6 +121,7 @@ def exponential_backoff(func, max_retries=10, retriable_exceptions=RETRIABLE_EXC
     while response is None and retry < max_retries:
         try:
             status, response = func()
+            print('Function successfully executed')
         except HttpError as e:
             if e.resp.status in retriable_status_codes:
                 error = 'A retriable HTTP error {:d} occurred:\n{}'.format(e.resp.status, e.content)
@@ -187,6 +192,8 @@ def initialize_upload(yt_client, video_file, metadata):
 
         return status, response
 
+    print('Starting EB upload')
+
     exponential_backoff(upload_video)
 
 
@@ -195,6 +202,7 @@ def main():
         wait_for_pb_notif(WebSocket())
         tmp_file, metadata = get_timelapse_file()
         file_name = '.'.join(metadata['name'].split('.')[:-1]).replace('_MK3_', '')
+        print(f'Video file retrieved: {file_name}')
         date = strptime(metadata['date'], '%Y-%m-%d %H:%M')
         title = file_name[:-14].replace('_', ' ')
         pipe_pos = [m.start() for m in LAYER_HEIGHT_REGEX.finditer(title)][0]
