@@ -1,8 +1,9 @@
 from json import dumps
-from os import popen, path, getenv
+from os import popen, path, getenv, getloadavg
 
 from dotenv import load_dotenv
 from paho.mqtt.client import Client
+from psutil import disk_usage, virtual_memory, cpu_percent
 
 WGUTILS = 'wg-utils'
 DIRNAME, _ = path.split(path.abspath(__file__))
@@ -32,15 +33,34 @@ def setup_mqtt():
     return temp_client
 
 
+def get_disk_free():
+    return round(disk_usage('/home').free / 1024 ** 3, 1)
+
+
+def get_memory_usage():
+    return virtual_memory().percent
+
+
+def get_cpu_usage():
+    return round(cpu_percent(interval=None))
+
+
+def get_load_15m():
+    return getloadavg()[2]
+
+
 def main():
     mqtt_client = setup_mqtt()
 
     stats = {
-        'temperature': get_cpu_temp()
+        'temperature': get_cpu_temp(),
+        'disk_free': get_disk_free(),
+        'memory_usage': get_memory_usage(),
+        'cpu_usage': get_cpu_usage(),
+        'load_15m': get_load_15m()
     }
 
     mqtt_client.publish(MQTT_TOPIC, payload=dumps(stats))
-
 
 
 if __name__ == '__main__':
