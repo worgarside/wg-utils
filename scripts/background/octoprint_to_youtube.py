@@ -6,6 +6,7 @@ from os import getenv, path
 from random import random
 from re import compile
 from shutil import copyfileobj
+from sys import stdout
 from tempfile import NamedTemporaryFile
 from time import sleep, strptime, strftime
 from urllib.request import urlopen, Request
@@ -51,6 +52,14 @@ OCTOPRINT_API_KEY = getenv('OCTOPRINT_API_KEY')
 LAYER_HEIGHT_REGEX = compile(r"(?:100(?:\.00?)?|\d?\d(?:\.\d\d?)?mm)")
 
 
+def output(m=''):
+    try:
+        stdout.write(m)
+        stdout.flush()
+    except Exception as e:
+        print(e)
+
+
 def _send_notification(t, m):
     post(
         'https://api.pushbullet.com/v2/pushes',
@@ -70,11 +79,11 @@ def wait_for_pb_notif(ws):
     ws.connect('wss://stream.pushbullet.com/websocket/{}'.format(PB_API_KEY))
 
     valid_pushes = []
-    print('Listening to PushBullet...')
+    output('Listening to PushBullet...')
 
     while not len(valid_pushes):
         if loads(ws.recv())['type'] == 'tickle':
-            print('Tickle push received!')
+            output('Tickle push received!')
 
             notif_time = datetime.now().timestamp() - 10
 
@@ -89,7 +98,7 @@ def wait_for_pb_notif(ws):
                 raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
         sleep(30)
 
-    print(f"Valid push found: {valid_pushes[0]['title']}")
+    output(f"Valid push found: {valid_pushes[0]['title']}")
     sleep(60)  # Make sure Octolapse has rendered properly
 
 
@@ -121,7 +130,7 @@ def exponential_backoff(func, max_retries=10, retriable_exceptions=RETRIABLE_EXC
     while response is None and retry < max_retries:
         try:
             status, response = func()
-            print('Function successfully executed')
+            output('Function successfully executed')
         except HttpError as e:
             if e.resp.status in retriable_status_codes:
                 error = 'A retriable HTTP error {:d} occurred:\n{}'.format(e.resp.status, e.content)
@@ -131,10 +140,10 @@ def exponential_backoff(func, max_retries=10, retriable_exceptions=RETRIABLE_EXC
             error = 'A retriable error occurred: {}'.format(e)
 
         if error is not None:
-            print(error)
+            output(error)
             retry += 1
             sleep_seconds = min(random() * (2 ** retry), max_backoff)
-            print('Sleeping {:f} seconds and then retrying...'.format(sleep_seconds))
+            output('Sleeping {:f} seconds and then retrying...'.format(sleep_seconds))
             sleep(sleep_seconds)
 
 
@@ -192,7 +201,7 @@ def initialize_upload(yt_client, video_file, metadata):
 
         return status, response
 
-    print('Starting EB upload')
+    output('Starting EB upload')
 
     exponential_backoff(upload_video)
 
@@ -202,7 +211,7 @@ def main():
         wait_for_pb_notif(WebSocket())
         tmp_file, metadata = get_timelapse_file()
         file_name = '.'.join(metadata['name'].split('.')[:-1]).replace('_MK3_', '')
-        print(f'Video file retrieved: {file_name}')
+        output(f'Video file retrieved: {file_name}')
         date = strptime(metadata['date'], '%Y-%m-%d %H:%M')
         title = file_name[:-14].replace('_', ' ')
         pipe_pos = [m.start() for m in LAYER_HEIGHT_REGEX.finditer(title)][0]
