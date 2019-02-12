@@ -94,6 +94,8 @@ def wait_for_pb_notif(ws):
             valid_pushes = [push for push in res.json()['pushes']
                             if 'title' in push and 'print' in push['title'].lower()]
 
+            output(f'Valid pushes: {len(valid_pushes)}')
+
             if len(valid_pushes) > 1:
                 raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
         sleep(30)
