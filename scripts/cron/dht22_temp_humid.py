@@ -32,7 +32,7 @@ def on_connect(client, userdata, flags, rc):
 def setup_mqtt():
     temp_client = Client()
     temp_client.on_connect = on_connect
-    temp_client.connect('192.168.1.2', 1883, 60)
+    temp_client.connect(MQTT_BROKER_HOST, 1883, 60)
     return temp_client
 
 
@@ -41,7 +41,9 @@ def main():
     s = DHT22.Sensor(pi(), DHT22_GPIO)
     s.trigger()
     sleep(2)  # DO NOT REMOVE - the sensor needs this delay to read the values
-    mqtt_client.publish(MQTT_TOPIC, payload=dumps({'temperature': s.temperature(), 'humidity': s.humidity()}))
+    temp = round(s.temperature(), 2)
+    rhum = round(s.humidity(), 2)
+    mqtt_client.publish(MQTT_TOPIC, payload=dumps({'temperature': temp, 'humidity': rhum}))
 
 
 if __name__ == '__main__':
