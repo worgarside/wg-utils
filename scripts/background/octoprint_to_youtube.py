@@ -85,7 +85,7 @@ def wait_for_pb_notif(ws):
         if loads(ws.recv())['type'] == 'tickle':
             output('Tickle push received!')
 
-            notif_time = datetime.now().timestamp() - 10
+            notif_time = datetime.now().timestamp() - (15 * 60)
 
             res = get('https://api.pushbullet.com/v2/pushes?modified_after={}'.format(notif_time), headers={
                 'Access-Token': PB_API_KEY
@@ -93,6 +93,8 @@ def wait_for_pb_notif(ws):
 
             valid_pushes = [push for push in res.json()['pushes']
                             if 'title' in push and 'print' in push['title'].lower()]
+
+            output(f'Valid pushes: {len(valid_pushes)}')
 
             if len(valid_pushes) > 1:
                 raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
