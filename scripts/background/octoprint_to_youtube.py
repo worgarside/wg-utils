@@ -54,7 +54,7 @@ LAYER_HEIGHT_REGEX = compile(r"(?:100(?:\.00?)?|\d?\d(?:\.\d\d?)?mm)")
 
 def output(m=''):
     try:
-        stdout.write(m)
+        print(m)
         stdout.flush()
     except Exception as e:
         print(e)
