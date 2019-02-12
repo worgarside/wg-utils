@@ -96,8 +96,6 @@ def wait_for_pb_notif(ws):
 
             output(f'Valid pushes: {len(valid_pushes)}')
 
-            if len(valid_pushes) > 1:
-                raise ValueError('Unexpected amount of valid pushes: {}'.format(len(valid_pushes)))
         sleep(30)
 
     output(f"Valid push found: {valid_pushes[0]['title']}")
@@ -210,21 +208,24 @@ def initialize_upload(yt_client, video_file, metadata):
 
 def main():
     while True:
-        wait_for_pb_notif(WebSocket())
-        tmp_file, metadata = get_timelapse_file()
-        file_name = '.'.join(metadata['name'].split('.')[:-1]).replace('_MK3_', '')
-        output(f'Video file retrieved: {file_name}')
-        date = strptime(metadata['date'], '%Y-%m-%d %H:%M')
-        title = file_name[:-14].replace('_', ' ')
-        pipe_pos = [m.start() for m in LAYER_HEIGHT_REGEX.finditer(title)][0]
+        try:
+            wait_for_pb_notif(WebSocket())
+            tmp_file, metadata = get_timelapse_file()
+            file_name = '.'.join(metadata['name'].split('.')[:-1]).replace('_MK3_', '')
+            output(f'Video file retrieved: {file_name}')
+            date = strptime(metadata['date'], '%Y-%m-%d %H:%M')
+            title = file_name[:-14].replace('_', ' ')
+            pipe_pos = [m.start() for m in LAYER_HEIGHT_REGEX.finditer(title)][0]
 
-        metadata['format_title'] = '{}| {} on Prusa Mk3 | {}'.format(title[:pipe_pos], title[pipe_pos:],
-                                                                     strftime('%H:%M %d/%m/%Y', date))
-        metadata['description'] = 'Filmed with Octolapse on a Pi Camera v2. ' \
-                                  'Automatically uploaded post-render through custom scripts.'
-        metadata['privacy_status'] = 'unlisted'
+            metadata['format_title'] = '{}| {} on Prusa Mk3 | {}'.format(title[:pipe_pos], title[pipe_pos:],
+                                                                         strftime('%H:%M %d/%m/%Y', date))
+            metadata['description'] = 'Filmed with Octolapse on a Pi Camera v2. ' \
+                                      'Automatically uploaded post-render through custom scripts.'
+            metadata['privacy_status'] = 'unlisted'
 
-        initialize_upload(_get_client(), tmp_file, metadata)
+            initialize_upload(_get_client(), tmp_file, metadata)
+        except Exception as e:
+            output(str(e))
         sleep(1800)
 
 
