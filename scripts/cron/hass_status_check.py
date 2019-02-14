@@ -1,16 +1,25 @@
-from requests import get, post
-from requests.exceptions import ReadTimeout
+from datetime import datetime
+from os import getenv, path
 from subprocess import Popen, PIPE
 from time import sleep, time
-from datetime import datetime
+
 from dotenv import load_dotenv
-from os import getenv
+from requests import get, post
+from requests.exceptions import ReadTimeout
 
 NOW = datetime.now()
 
-load_dotenv()
+WGUTILS = 'wg-utils'
+DIRNAME, _ = path.split(path.abspath(__file__))
+WGUTILS_DIR = DIRNAME[:DIRNAME.find(WGUTILS) + len(WGUTILS)] + '/'
+
+ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
+
+load_dotenv(ENV_FILE)
 
 PB_API_KEY = getenv('PB_API_KEY')
+HASS_LOCAL_IP = getenv('HASS_LOCAL_IP')
+HASS_PORT = getenv('HASS_PORT')
 
 
 def send_notification(m, log_m=True):
@@ -46,7 +55,7 @@ if __name__ == '__main__':
     server_unresponsive = True
     while server_unresponsive:
         try:
-            req = get('http://192.168.1.2:8123', timeout=5)
+            req = get('http://{}:{}'.format(HASS_LOCAL_IP, HASS_PORT), timeout=5)
             message = "Server response: {} - {}".format(req.status_code, req.reason)
             if not req.status_code == 200:
                 send_notification(message)

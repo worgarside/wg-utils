@@ -46,7 +46,7 @@ RETRIABLE_EXCEPTIONS = (HttpLib2Error, IOError, NotConnected,
 RETRIABLE_STATUS_CODES = (500, 502, 503, 504)
 
 PB_API_KEY = getenv('PB_API_KEY')
-OCTOPI_HOST = getenv('OCTOPI_HOST')
+OCTOPI_HOST = getenv('OCTOPI_LOCAL_IP')
 OCTOPRINT_API_KEY = getenv('OCTOPRINT_API_KEY')
 
 LAYER_HEIGHT_REGEX = compile(r"(?:100(?:\.00?)?|\d?\d(?:\.\d\d?)?mm)")
