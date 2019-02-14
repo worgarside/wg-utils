@@ -1,1 +1,1 @@
-python ~/Projects/wg-utils/main.py "$@"
+python ~/wg-utils/main.py "$@"
