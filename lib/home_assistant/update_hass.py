@@ -1,11 +1,10 @@
-from subprocess import Popen, PIPE
-from pathlib import Path
-from hashlib import sha1
-from git import Repo
 from os import makedirs
+from subprocess import Popen, PIPE
 
-HASS_DIR = '/home/homeassistant/.homeassistant/'
-SOURCE_DIR = '/home/pi/.homeassistant/'
+from git import Repo
+
+HASS_DIR = '/home/hass/.homeassistant/'
+SOURCE_DIR = '/home/pi/hass_config_src/'
 CORE_FILES_LIST = '.core_files'
 INDENT = '    '
 
