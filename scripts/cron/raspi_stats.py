@@ -1,5 +1,6 @@
 from json import dumps
 from os import popen, path, getenv, getloadavg
+from socket import gethostname
 
 from dotenv import load_dotenv
 from paho.mqtt.client import Client
@@ -14,7 +15,7 @@ ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
 load_dotenv(ENV_FILE)
 
 MQTT_BROKER_HOST = getenv('MQTT_BROKER_HOST')
-MQTT_TOPIC = getenv('RASPI_STATS_MQTT_TOPIC')
+MQTT_TOPIC = f'/homeassistant/{gethostname()}/stats'
 
 
 def get_cpu_temp():
