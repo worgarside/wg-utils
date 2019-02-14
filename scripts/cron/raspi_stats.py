@@ -14,7 +14,7 @@ ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
 
 load_dotenv(ENV_FILE)
 
-MQTT_BROKER_HOST = getenv('MQTT_BROKER_HOST')
+MQTT_BROKER_HOST = getenv('HASSPI_LOCAL_IP')
 MQTT_TOPIC = f'/homeassistant/{gethostname()}/stats'
 
 

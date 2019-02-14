@@ -16,7 +16,7 @@ ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
 
 load_dotenv(ENV_FILE)
 
-MQTT_BROKER_HOST = getenv('MQTT_BROKER_HOST')
+MQTT_BROKER_HOST = getenv('HASSPI_LOCAL_IP')
 DHT22_GPIO = int(getenv('DHT22_GPIO', '-1'))
 MQTT_TOPIC = getenv('DHT22_MQTT_TOPIC')
 
