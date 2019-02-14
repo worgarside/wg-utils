@@ -18,7 +18,7 @@ ENV_FILE = '{}secret_files/.env'.format(WGUTILS_DIR)
 load_dotenv(ENV_FILE)
 
 PB_API_KEY = getenv('PB_API_KEY')
-HASS_LOCAL_IP = getenv('HASS_LOCAL_IP')
+HASS_LOCAL_IP = getenv('HASSPI_LOCAL_IP')
 HASS_PORT = getenv('HASS_PORT')
 
 
@@ -40,8 +40,7 @@ def send_notification(m, log_m=True):
 
 
 def log(m='', newline=False):
-    with open('/home/pi/Projects/wg-utils/logs/hass_status_{}-{:02d}-{:02d}.log'.format(NOW.year, NOW.month, NOW.day),
-              'a') as f:
+    with open('{}logs/hass_status_{}-{:02d}-{:02d}.log'.format(WGUTILS_DIR, NOW.year, NOW.month, NOW.day), 'a') as f:
         if newline:
             f.write('\n')
         f.write('\n[{}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}]: {}'
@@ -50,9 +49,10 @@ def log(m='', newline=False):
 
 
 if __name__ == '__main__':
-    log('Running status check.', newline=True)
+    log('Running status check. http://{}:{}'.format(HASS_LOCAL_IP, HASS_PORT), newline=True)
     start_time = time()
     server_unresponsive = True
+
     while server_unresponsive:
         try:
             req = get('http://{}:{}'.format(HASS_LOCAL_IP, HASS_PORT), timeout=5)
@@ -75,4 +75,3 @@ if __name__ == '__main__':
                 log('Rebooting pi')
                 log()
                 stdout, stderr = Popen(['sudo', 'reboot'], stdout=PIPE, stderr=PIPE).communicate()
-                exit()
