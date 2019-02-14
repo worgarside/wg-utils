@@ -23,7 +23,7 @@ def main():
     print('Pulling from Git...')
     repo.remotes.origin.pull()
 
-    with open(f'{HASS_DIR}{CORE_FILES_LIST}', 'r') as f:
+    with open(f'{SOURCE_DIR}{CORE_FILES_LIST}', 'r') as f:
         core_files = [x.rstrip('\n\r') for x in f.readlines()]
 
     with open(f'{HASS_DIR}.gitignore') as f:
