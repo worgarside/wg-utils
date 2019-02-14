@@ -244,3 +244,4 @@ def user_help():
 
 if __name__ == '__main__':
     main()
+    # TODO: add some kind of pkl file to store previously uploaded OctoLapses to avoid re-uploading
