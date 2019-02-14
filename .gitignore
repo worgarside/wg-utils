@@ -2,5 +2,6 @@
 *.cpython-36.pyc
 *.pyc
 *.env
+*.pkl
 secret_files/*
 scripts/cron/freecycle_links.pkl

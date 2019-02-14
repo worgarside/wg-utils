@@ -1,12 +1,12 @@
-from os import makedirs
+from os import makedirs, walk
 from subprocess import Popen, PIPE
-
+from pprint import pprint
 from git import Repo
 
 HASS_DIR = '/home/hass/.homeassistant/'
 SOURCE_DIR = '/home/pi/hass_config_src/'
-CORE_FILES_LIST = '.core_files'
 INDENT = '    '
+GIT_DIR = f'{SOURCE_DIR}.git'
 
 
 def _compare_files(file1, file2):
@@ -16,21 +16,28 @@ def _compare_files(file1, file2):
                 return f1.read() == f2.read()
     except FileNotFoundError:
         return False
+    except Exception:
+        print(file1, file2)
+        raise
 
 
 def main():
+    core_files = []
+
+    for root, dirs, files in walk(SOURCE_DIR):
+        if not root.startswith(GIT_DIR):
+            for file in files:
+                core_files.append(f"{root[:-1] if root.endswith('/') else root}/{file}")
+
     repo = Repo(SOURCE_DIR)
     print('Pulling from Git...')
     repo.remotes.origin.pull()
 
-    with open(f'{SOURCE_DIR}{CORE_FILES_LIST}', 'r') as f:
-        core_files = [x.rstrip('\n\r') for x in f.readlines()]
-
     with open(f'{SOURCE_DIR}.gitignore') as f:
         gitignore_files = set([x.rstrip('\n\r') for x in f.readlines()])
 
-    files_to_copy = [(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}') for f in core_files
-                     if not _compare_files(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}')
+    files_to_copy = [(f, f.replace(SOURCE_DIR, HASS_DIR)) for f in core_files
+                     if not _compare_files(f, f.replace(SOURCE_DIR, HASS_DIR))
                      and f not in gitignore_files]
     print(f'{len(files_to_copy)} files to copy\n')
 
@@ -40,7 +47,6 @@ def main():
         p.wait()
         output, error = p.communicate()
         while error:
-            print(INDENT + error.decode('utf-8').rstrip('\n'))
             if 'no such file or directory' in error.decode('utf-8').lower():
                 directory = '/'.join(error.decode('utf-8').split("'")[1].split('/')[:-1])
                 print(f'{INDENT}Creating directory {directory}')
@@ -49,6 +55,7 @@ def main():
                 p.wait()
                 output, error = p.communicate()
             else:
+                print(error)
                 break
 
     if input('Files copied. Restart home-assistant@homeassistant.service? (Y/n) ').lower() in {'y', ''}:
