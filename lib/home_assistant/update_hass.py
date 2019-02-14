@@ -1,11 +1,10 @@
-from subprocess import Popen, PIPE
-from pathlib import Path
-from hashlib import sha1
-from git import Repo
 from os import makedirs
+from subprocess import Popen, PIPE
 
-HASS_DIR = '/home/homeassistant/.homeassistant/'
-SOURCE_DIR = '/home/pi/.homeassistant/'
+from git import Repo
+
+HASS_DIR = '/home/hass/.homeassistant/'
+SOURCE_DIR = '/home/pi/hass_config_src/'
 CORE_FILES_LIST = '.core_files'
 INDENT = '    '
 
@@ -24,10 +23,10 @@ def main():
     print('Pulling from Git...')
     repo.remotes.origin.pull()
 
-    with open(f'{HASS_DIR}{CORE_FILES_LIST}', 'r') as f:
+    with open(f'{SOURCE_DIR}{CORE_FILES_LIST}', 'r') as f:
         core_files = [x.rstrip('\n\r') for x in f.readlines()]
 
-    with open(f'{HASS_DIR}.gitignore') as f:
+    with open(f'{SOURCE_DIR}.gitignore') as f:
         gitignore_files = set([x.rstrip('\n\r') for x in f.readlines()])
 
     files_to_copy = [(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}') for f in core_files
