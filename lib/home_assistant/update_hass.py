@@ -26,7 +26,7 @@ def main():
     with open(f'{SOURCE_DIR}{CORE_FILES_LIST}', 'r') as f:
         core_files = [x.rstrip('\n\r') for x in f.readlines()]
 
-    with open(f'{HASS_DIR}.gitignore') as f:
+    with open(f'{SOURCE_DIR}.gitignore') as f:
         gitignore_files = set([x.rstrip('\n\r') for x in f.readlines()])
 
     files_to_copy = [(f'{SOURCE_DIR}{f}', f'{HASS_DIR}{f}') for f in core_files
