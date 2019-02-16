@@ -5,3 +5,4 @@
 *.pkl
 secret_files/*
 scripts/cron/freecycle_links.pkl
+*.sql
