@@ -15,6 +15,7 @@ google-auth-oauthlib = "*"
 websocket-client = "*"
 paho-mqtt = "*"
 psutil = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 
