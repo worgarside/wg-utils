@@ -81,11 +81,12 @@ def main():
         sleep(30)
 
         if check_status():
-            notify(m=f"PIA successfully restarted with {retry} attempt{'s' if retry > 1 else ''}")
+            notify(m=f"PIA successfully restarted with {retry} attempt{'s' if retry > 1 else ''}.")
             exit()
 
-    notify(m='Unable to restart PIA. Stopping deluge.')
-    kill_deluge()
+    if not check_status():
+        notify(m='Unable to restart PIA. Stopping deluge.')
+        kill_deluge()
 
 
 if __name__ == '__main__':
