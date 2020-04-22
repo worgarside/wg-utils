@@ -1,16 +1,16 @@
-name-template: 'Draft Release🌈'
+name-template: 'Draft Release'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
-  - title: '🚀 Features'
+  - title: 'Features'
     labels:
       - 'feature'
       - 'enhancement'
-  - title: '🐛 Bug Fixes'
+  - title: 'Bug Fixes'
     labels:
       - 'fix'
       - 'bugfix'
       - 'bug'
-  - title: '🧰 Maintenance'
+  - title: 'Maintenance'
     labels:
       - 'chore'
       - 'documentation'
@@ -23,7 +23,5 @@ template: |
   ## Jira Issues
 
   [DEVOPS-](https://chetwood.atlassian.net/browse/DEVOPS-)
-
-  ## Changes
 
   $CHANGES
