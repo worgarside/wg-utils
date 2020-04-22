@@ -1,4 +1,4 @@
-name-template: 'v$NEXT_PATCH_VERSION 🌈'
+name-template: 'Draft Release🌈'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: '🚀 Features'
@@ -16,6 +16,14 @@ categories:
       - 'documentation'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
+  ## Release Summary
+
+  - X
+
+  ## Jira Issues
+
+  [DEVOPS-](https://chetwood.atlassian.net/browse/DEVOPS-)
+
   ## Changes
 
   $CHANGES
