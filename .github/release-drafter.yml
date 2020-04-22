@@ -16,6 +16,14 @@ categories:
       - 'documentation'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
+  ## Release Summary
+
+  - X
+
+  ## Jira Issues
+
+  [DEVOPS-](https://chetwood.atlassian.net/browse/DEVOPS-)
+
   ## Changes
 
   $CHANGES
